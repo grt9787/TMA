@@ -47,9 +47,9 @@ export class TaskListComponent implements OnInit {
     this.router.navigate(['/tasks/edit', taskId]);
   }
 
-  openDeleteContactModal(contactId: number) {
+  openDeleteTaskModal(taskId: number) {
     this.isDeleteMode = true;
-    this.selectedTaskId = contactId;
+    this.selectedTaskId = taskId;
     this.deleteTaskModal.show();
   }
 

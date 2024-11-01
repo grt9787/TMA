@@ -3,30 +3,30 @@ Task Management App
 # Project README
 
 ## Overview
-This project demonstrates expertise in Angular and ASP.NET Core, featuring a user-friendly interface for managing contacts. It includes custom middleware to handle authorization and error management, ensuring secure access and robust error handling.
+This project demonstrates expertise in Angular and ASP.NET Core, featuring a user-friendly interface for managing tasks. It includes custom middleware to handle authorization and error management, ensuring secure access and robust error handling.
 
 ## Technologies Used
 - **Angular**: For building dynamic web applications with optimized code.
-- **ASP.NET Core**: Used for creating a RESTful API to manage contacts.
-- **JSON**: Contact data is stored in a JSON file.
+- **ASP.NET Core**: Used for creating a RESTful API to manage tasks.
+- **JSON**: task data is stored in a JSON file.
 - **Dependency Injection**: Applied for managing logging and services.
 - **Detailed Logging**: Logs requests, errors, and unauthorized access attempts to aid debugging and monitoring.
 
 ## Features
 
 ### Angular Application
-- **Contact Management**:
-  - Modals for creating and editing contacts.
-  - Confirmation modals for contact deletion.
+- **Task Management**:
+  - Reactive Forms for creating and editing tasks.
+  - Confirmation modals for task deletion.
   - Efficient data processing through optimized filtering and observables.
 
-### ASP.NET Core API for Contact Management
+### ASP.NET Core API for Task Management
 - **Endpoints**:
-  - `GET /Task/GetTasks`: Retrieves all contacts.
-  - `GET /Task/GetContactById`: Retrieves a specific contact by ID.
-  - `POST /Task/AddContact`: Adds a new contact.
-  - `PUT /Task/UpdateContact`: Updates an existing contact.
-  - `DELETE /Task/DeleteContact`: Deletes a contact by ID.
+  - `GET /Task/GetTasks`: Retrieves all tasks.
+  - `GET /Task/GetTaskById`: Retrieves a specific Task by ID.
+  - `POST /Task/AddTask`: Adds a new Task.
+  - `PUT /Task/UpdateTask`: Updates an existing Task.
+  - `DELETE /Task/DeleteTask`: Deletes a task by ID.
 
 - **Custom Middleware**:
   - **Authorization Middleware**: Manages authorization tokens and provides detailed error responses (404, 401, 500).
@@ -71,3 +71,22 @@ Ensure the following are installed:
      ```bash
      dotnet run
      ```
+ 4. **Run API Unit test project:**
+
+- Navigate to test project directory from root:
+
+- cd TMA.Test
+
+- Run the test project:
+
+- dotnet test
+
+5.**5Run Angular test specs:**
+
+- Navigate to client app from root directory:
+
+- cd TMA.Web\ClientApp.
+
+- Run angular test specs:
+
+- ng test
