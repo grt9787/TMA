@@ -90,3 +90,7 @@ Ensure the following are installed:
 - Run angular test specs:
 
 - ng test
+
+6.**View Swagger Documentation: Access the API documentation at:**
+
+- https://localhost:7284/swagger/index.html or  http://localhost:5093/swagger/index.html
