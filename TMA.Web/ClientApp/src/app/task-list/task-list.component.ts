@@ -17,7 +17,6 @@ export class TaskListComponent implements OnInit {
   pageSize = 10;
   totalTasks = 0;
   isDeleteMode: boolean = false;
-  hasMoreTasks = true;
   @ViewChild('deleteTaskModal', { static: true }) deleteTaskModal!: ModalDirective;
 
   constructor(
@@ -33,7 +32,7 @@ export class TaskListComponent implements OnInit {
     this.loading = true;
     this.taskService.getTask(this.currentPage, this.pageSize).subscribe((data: any) => {
       this.tasks = data.tasks;
-      this.totalTasks = data.count;
+      this.totalTasks = data.totalRecords;
       this.loading = false;
     });
   }
