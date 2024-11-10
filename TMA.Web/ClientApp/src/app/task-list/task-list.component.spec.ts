@@ -6,6 +6,7 @@ import { of, throwError } from 'rxjs';
 import { TaskDto } from '../modal/TaskDto';
 import { ElementRef } from '@angular/core';
 import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
+import { AuthService } from '../services/auth.service';
 
 describe('TaskListComponent', () => {
   let component: TaskListComponent;
@@ -13,17 +14,22 @@ describe('TaskListComponent', () => {
   let routerSpy: jasmine.SpyObj<Router>;
   let mockTaskService: jasmine.SpyObj<TaskService>;
   let deleteTaskModalMock: jasmine.SpyObj<ModalDirective>;
+  let mockAuthService: jasmine.SpyObj<AuthService>;
   beforeEach(async () => {
+   
      mockTaskService = jasmine.createSpyObj('TaskService', ['getTask', 'deleteTask']);
      routerSpy = jasmine.createSpyObj('Router', ['navigate']);
      deleteTaskModalMock = jasmine.createSpyObj('ModalDirective', ['show', 'hide']);
+    mockAuthService = jasmine.createSpyObj('AuthService', ['getUserPermissions']);
+    mockAuthService.getUserPermissions.and.returnValue(['create', 'edit', 'delete', 'view']); 
 
     await TestBed.configureTestingModule({
       imports: [ModalModule.forRoot()],
       declarations: [TaskListComponent],
       providers: [
         { provide: TaskService, useValue: mockTaskService },
-        { provide: Router, useValue: routerSpy }
+        { provide: Router, useValue: routerSpy },
+        { provide: AuthService, useValue: mockAuthService }
       ]
     });
 
@@ -65,7 +71,7 @@ describe('TaskListComponent', () => {
   it('should fetch the previous page of Tasks', () => {
     component.currentPage = 2;
     component.pageSize = 10;
-    spyOn(component, 'getTasks');
+   spyOn(component, 'getTasks');
 
     component.previousPage();
 
@@ -107,6 +113,8 @@ describe('TaskListComponent', () => {
       // Mock the deleteTask service method to return an observable
       mockTaskService.deleteTask.and.returnValue(of(null));
 
+      spyOn(component, 'getTasks');
+
       // Call the deleteTask method
       component.deleteTask();
 
@@ -116,8 +124,8 @@ describe('TaskListComponent', () => {
       // Assert that closeDeleteModal hides the modal
       expect(deleteTaskModalMock.hide).toHaveBeenCalled();
 
-      // Assert that the router navigates to the task list
-      expect(routerSpy.navigate).toHaveBeenCalledWith(['/task-list']);
+
+          expect(component.getTasks).toHaveBeenCalled();
     });
 
     it('should not call deleteTask if selectedTaskId is invalid', () => {

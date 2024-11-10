@@ -23,7 +23,13 @@ This project includes various components that demonstrate proficiency in Angular
 
 ### ASP.NET Core API for Task Management
 
+
 - **Task Management Endpoints**:
+  - **POST /auth /login**:Login into Application.
+  - **GET /admin /GetRoles**: Retrieves a list of all Roles.
+  - **GET /admin /GetActions**: Retrieves a list of all Action.
+  - **GET /admin /GetRoleActions**: Retrieves a list of all RoleAction.
+  - **POST /admin/UpdateRoleActions**: Updates an existing updateRoleAction Details.
   - **GET /Tasks /GetTasks**: Retrieves a list of all Task.
   - **GET /Tasks/GetTaskById**: Retrieves a specific Task by ID.
   - **POST /Tasks/AddTasks**: Adds a new Task to the list.
@@ -73,7 +79,11 @@ npm install.
 -  Run the API application:
 
 - dotnet run
-
+**4.Login Credentials:**
+- Admin:   Email : "admin@example.com", Password : "Admin@123";
+- Manager:   Email : "manager@example.com", Password : "Manager@123";
+- User:   Email : "user@example.com", Password : "User@123";
+- Role Management and Logout is Available  under NavbarMenu User Icon.(Note:Role Management can be accessable only for  Admin)
 
 
 

@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TMA.DAL\TMA.DAL.csproj" />
+    <ProjectReference Include="..\TMA.Api\TMA.Api.csproj" />
     <ProjectReference Include="..\TMA.Web\TMA.Web.csproj" />
   </ItemGroup>
 

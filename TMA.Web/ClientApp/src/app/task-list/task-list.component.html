@@ -1,67 +1,81 @@
-
-<div class="container-fluid ">
-  <div class="card shadow-sm p-3 container-height">
-    <div class="row mb-2">
-      <div class="col-md-6">
-        <h5>Task List</h5>
+<div class="bg-image">
+  <div class="page-container">
+    <div class="card shadow-sm p-3 flex-grow-1">
+      <div class="row mb-2">
+        <div class="col-md-6">
+          <h5>Task List</h5>
+        </div>
+        <div class="col-md-6 d-flex justify-content-end">
+          <button *ngIf="hasPermission('create')" type="button" class="btn btn-sm btn-success">
+            <a routerLink="/tasks/create" class="text-white text-decoration-none">Create Task</a>
+          </button>
+        </div>
       </div>
-      <div class="col-md-6 d-flex justify-content-end">
-        <button type="button" class="btn btn-sm btn-success">
-          <a routerLink="/tasks/create" class="text-white text-decoration-none">Create Task</a>
-        </button>
-      </div>
-    </div>
-    <div>
-      <table class="table table-hover align-middle">
-        <thead class="table-header">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-header">
+            <tr>
+              <th width="7%">Title</th>
+              <th width="44%">Description</th>
+              <th width="7%">Status</th>
+              <th width="7%">Task Type</th>
+              <th width="7%">Created By</th>
+              <th width="7%">Created On</th>
+              <th width="7%">Updated By</th>
+              <th width="7%">Updated On</th>
+              <th width="7%">Actions</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="tasks.length; else noTasks">
+            <tr *ngFor="let task of tasks">
+              <td class=" align-items-center">
+                <div><strong>{{ task.title }}</strong></div>
+              </td>
+              <td>{{ task.description }}</td>
+              <td>
+                <span *ngIf="task.isCompleted" class="badge badge-pill badge-success">Completed</span>
+                <span *ngIf="!task.isCompleted" class="badge badge-pill badge-warning">InProgress</span>
+              </td>
+              <td>
+                <span *ngFor="let taskType of taskTypeList">
+                  <span *ngIf="taskType.value === task.taskTypeId">{{ taskType.key }}</span>
+                </span>
+              </td>
+              <td>{{ task.createdBy }}</td>
+              <td>{{ task.createdDate | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ task.modifiedBy }}</td>
+              <td>{{ task.modifiedDate | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <a *ngIf="hasPermission('edit')" class="text-primary me-3" ngbTooltip="Edit" (click)="updateTask(task.taskId!)">
+                  <i class="fa fa-edit"></i>
+                </a>
+                <a *ngIf="hasPermission('delete')" class="text-danger" ngbTooltip="Delete" (click)="openDeleteTaskModal(task.taskId!)">
+                  <i class="fa fa-trash"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <ng-template #noTasks>
           <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Status</th>
-            <th>Created On</th>
-            <th>Updated On</th>
-            <th>Actions</th>
+            <td colspan="9" class="text-center p-3">No tasks found.</td>
           </tr>
-        </thead>
-        <tbody style="overflow-y: auto;">
-          <tr *ngFor="let c of tasks">
-            <td class="d-flex align-items-center">
-              <div>
-                <strong>{{ c.title }}</strong><br>
-              </div>
-            </td>
-            <td>{{ c.description }}</td>
-            <td>
-              <span *ngIf="c.isCompleted" class="badge badge-pill badge-success"> Completed </span>
-              <span *ngIf="!c.isCompleted" class="badge badge-pill badge-danger"> InProgress </span>
-            </td>
-            <td>{{ c.createdAt | date: 'yyyy/MM/dd' }}</td>
-            <td>{{ c.updatedAt | date: 'yyyy/MM/dd' }}</td>
-            <td>
-              <a class="text-primary me-2" ngbTooltip="Edit" (click)="updateTask(c.id!)">
-                <i class="fa fa-edit"></i>
-              </a>
-              <a class="text-danger" ngbTooltip="Delete" (click)="openDeleteTaskModal(c.id!)">
-                <i class="fa fa-trash"></i>
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        </ng-template>
+      </div>
+
+      <div *ngIf="loading" class="text-center p-3">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
     </div>
 
-    <div *ngIf="loading" class="text-center p-3">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
+    <div class="pagination d-flex justify-content-between mt-2">
+      <button class="btn theme btn-sm" (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+      <span class="mx-2 align-self-center">Page {{ currentPage }} of {{ totalTasks / pageSize | number: '1.0-0' }}</span>
+      <button class="btn theme btn-sm" (click)="nextPage()" [disabled]="currentPage * pageSize >= totalTasks">Next</button>
     </div>
   </div>
-</div>
-
-<div class="pagination d-flex justify-content-between mt-2">
-  <button class="btn theme btn-sm" (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
-  <span class="mx-2 align-self-center">Page {{ currentPage }} of {{ totalTasks / pageSize | number: '1.0-0' }}</span>
-  <button class="btn theme btn-sm" (click)="nextPage()" [disabled]="currentPage * pageSize >= totalTasks">Next</button>
 </div>
 
 <div bsModal #deleteTaskModal="bs-modal" class="modal fade" tabindex="-1" role="dialog">

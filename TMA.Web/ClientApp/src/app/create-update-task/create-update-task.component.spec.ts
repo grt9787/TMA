@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { CreateUpdateTaskComponent } from './create-update-task.component';
 import { TaskService } from '../services/task.service';
+import { TokenService } from '../services/token.service';
 import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
 import { TaskDto } from '../modal/TaskDto';
 
@@ -14,24 +15,27 @@ describe('CreateUpdateTaskComponent', () => {
   let mockTaskService: jasmine.SpyObj<TaskService>;
   let mockRouter: jasmine.SpyObj<Router>;
   let mockActivatedRoute: jasmine.SpyObj<ActivatedRoute>;
-
+  let mockTokenService: jasmine.SpyObj<TokenService>;
   beforeEach(() => {
     // Create mocks for the services
     mockTaskService = jasmine.createSpyObj('TaskService', ['getTasksById', 'createTask', 'updateTask', 'deleteTask']);
     mockRouter = jasmine.createSpyObj('Router', ['navigate']);
+    const mockTokenService = jasmine.createSpyObj('TokenService', ['getItem']);
+
     // Create a mock for ActivatedRoute with paramMap
     mockActivatedRoute = {
       snapshot: {
         paramMap: {
           get: jasmine.createSpy('get').and.callFake((key: string) => {
-            if (key === 'id') {
-              return null; 
+            if (key === 'taskId') {
+              return null;
             }
             return null;
           })
         }
       }
     } as any;
+
     TestBed.configureTestingModule({
       declarations: [CreateUpdateTaskComponent],
       imports: [ReactiveFormsModule, ModalModule.forRoot()],
@@ -39,7 +43,8 @@ describe('CreateUpdateTaskComponent', () => {
         FormBuilder,
         { provide: TaskService, useValue: mockTaskService },
         { provide: Router, useValue: mockRouter },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute }
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: TokenService, useValue: mockTokenService }
       ]
     });
 
@@ -48,11 +53,10 @@ describe('CreateUpdateTaskComponent', () => {
     const mockDeleteTaskModal = jasmine.createSpyObj('ModalDirective', ['hide']);
     component.deleteTaskModal = mockDeleteTaskModal;
   });
-
   describe('ngOnInit', () => {
     it('should patch the form with task data when taskId is present', () => {
       const taskId = 1;
-      const task: TaskDto = { id: taskId, title: 'Test Task', description: 'Test Description', isCompleted: false, createdAt: new Date(), updatedAt: null };
+      const task: TaskDto = { taskId: taskId, title: 'Test Task', description: 'Test Description', isCompleted: false, createdDate: new Date(), createdBy: 'Admin', modifiedDate: null, modifiedBy: '', taskStatusId: null, taskTypeId: null };
 
       // Setup the mock route to return the taskId
       mockActivatedRoute.snapshot.paramMap.get = () => taskId.toString();
@@ -75,7 +79,7 @@ describe('CreateUpdateTaskComponent', () => {
 
   describe('saveTaskForm', () => {
     it('should mark form as submitted and navigate to task-list on valid form submission', () => {
-      component.taskForm.patchValue({ id: 0, title: 'New Task', description: 'Task Description', isCompleted: false });
+      component.taskForm.patchValue({ taskId: 0, title: 'New Task', description: 'Task Description', isCompleted: false, createdDate: new Date(), createdBy: 'Admin', modifiedDate: null, modifiedBy: '', taskStatusId: 1, taskTypeId: 1 });
       mockTaskService.createTask.and.returnValue(of({})); // Mock create task response
 
       component.saveTaskForm();
@@ -92,14 +96,14 @@ describe('CreateUpdateTaskComponent', () => {
 
       expect(component.submitted).toBeTrue();
       expect(mockTaskService.createTask).not.toHaveBeenCalled();
- 
+
     });
   });
 
   describe('deleteTask', () => {
     it('should confirm and delete the task, then navigate to task-list', () => {
       spyOn(window, 'confirm').and.returnValue(true); // Mock confirm dialog
-      component.taskForm.patchValue({ id: 1 });
+      component.taskForm.patchValue({ taskId: 1 });
       mockTaskService.deleteTask.and.returnValue(of({})); // Mock delete response
 
       component.deleteTask();

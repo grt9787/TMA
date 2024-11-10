@@ -1,0 +1,63 @@
+<div class="bg-image">
+  <div class="container  my-5">
+
+
+    <div class="card p-4 shadow-sm">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Role Management</h2>
+        <button type="button" class="btn btn-outline-info" (click)="cancel()">
+          <i class="fa fa-arrow-left"></i> Back
+        </button>
+      </div>
+      <div class="row gy-md-4 task-form mt-2 ">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4">
+          <div class="form-group d-flex align-items-center">
+            <label class="form-label me-2" for="role-select">Select Role</label>
+            <span class="flex-grow-1">
+              <ng-select class="ng-select"
+                         placeholder="Select"
+                         [items]="roles"
+                         [clearable]="false"
+                         bindLabel="name"
+                         appearance="outline"
+                         (change)="onRoleSelect($event)"
+                         [searchable]="false"
+                         bindValue="roleId">
+              </ng-select>
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      <div *ngIf="roleActions.length" class="permissions-table mt-3">
+        <h4>Permissions</h4>
+        <table class="table table-hover align-middle">
+          <thead class="table-header">
+            <tr>
+              <th>Action</th>
+              <th>Full Access</th>
+              <th>Read-Only</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let action of roleActions">
+              <td>{{ action.action?.actionName }}</td>
+              <td>
+                <input type="checkbox"
+                       [checked]="action?.hasFullAccess"
+                       (change)="updateRoleAction(action?.actionId ?? 0, $event, action?.hasReadOnly ?? false)">
+              </td>
+              <td>
+                <input type="checkbox"
+                       [checked]="action?.hasReadOnly"
+                       (change)="updateRoleAction(action?.actionId ?? 0, action?.hasFullAccess ?? false, $event)">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+

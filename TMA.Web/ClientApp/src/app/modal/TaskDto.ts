@@ -1,8 +1,12 @@
 export class TaskDto {
-  id: number | null = null;
+  taskId: number | null = null;
+  taskTypeId: number | null  = null;
+  taskStatusId: number | null = null;
   title: string | null = null;
   description: string | null = null;
   isCompleted: boolean = false;
-  createdAt: Date | null=null;
-  updatedAt: Date | null = null;
+  createdBy: string | null = null;
+  modifiedBy: string | null = null;
+  createdDate: Date | null=null;
+  modifiedDate: Date | null = null;
 }

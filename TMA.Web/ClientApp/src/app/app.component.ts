@@ -8,14 +8,14 @@ import { TaskService } from './services/task.service';
 })
 export class AppComponent implements OnInit {
   title = 'app';
-  static userPreferences = `/${'task-list'}`;
+  static userPreferences = `/${'login'}`;
   constructor(
     public taskService: TaskService,
     private readonly router: Router
     ) { }
 
   ngOnInit() {
- this.router.navigate(['/task-list'])
+ this.router.navigate(['/login'])
   }
 
    

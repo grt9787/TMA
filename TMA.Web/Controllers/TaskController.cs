@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using TMA.DAL;
+using TMA.Api.Repository;
 using TMA.Model;
 
 namespace TMA.Controllers
@@ -11,14 +11,13 @@ namespace TMA.Controllers
 
     public class TaskController : ControllerBase
     {
-        private readonly string _filePath = "tasks.json";
         private readonly ILogger<TaskController> _logger;
-        private readonly ITaskRepository _TaskRepository;
+        private readonly ITaskRepository _taskRepository;
 
-        public TaskController(ILogger<TaskController> logger, ITaskRepository TaskRepository)
+        public TaskController(ILogger<TaskController> logger, ITaskRepository taskRepository)
         {
             _logger = logger;
-            _TaskRepository = TaskRepository;
+            _taskRepository = taskRepository;
         }
 
         /// <summary>
@@ -30,15 +29,15 @@ namespace TMA.Controllers
         
         [HttpGet("GetTasks")]
         [SwaggerOperation(Summary = "Get Task List", Description = "", OperationId = "GetTaskList", Tags = new[] { "Task" })]
-        public IActionResult GetTasks(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetTaskList(int page = 1, int pageSize = 10)
         {
-            var result = _TaskRepository.GetAllTasks(page, pageSize);
+            var (tasks, count) = await _taskRepository.GetAllAsync(page, pageSize);
 
             return Ok(new
             {
                 Message = "Tasks retrieved successfully",
-                Tasks = result.tasks,
-                TotalRecords = result.count
+                Tasks = tasks,
+                TotalRecords = count
             });
         }
         /// <summary>
@@ -49,18 +48,16 @@ namespace TMA.Controllers
         
         [HttpGet("GetTaskById")]
         [SwaggerOperation(Summary = "Get Task By Id", Description = "", OperationId = "GetTaskById", Tags = new[] { "Task" })]
-        public IActionResult GetTaskById(int TaskId)
+        public async Task<IActionResult> GetTaskById(int taskId)
         {
-            var Tasks = new List<TaskDto>();
-
-            var Task = _TaskRepository.GetTaskById(TaskId);
-
-            if (Task == null)
+            var task = await _taskRepository.GetByIdAsync(taskId);
+   
+            if (task == null)
             {
-                return NotFound(new { Message = $"Task with ID {TaskId} not found." });
+                return NotFound(new { Message = $"Task with ID {taskId} not found." });
             }
 
-            return Ok(Task);
+            return Ok(task);
         }
         /// <summary>
         /// Adds a new task.
@@ -70,14 +67,16 @@ namespace TMA.Controllers
         
         [HttpPost("AddTask")]
         [SwaggerOperation(Summary = "Add Task", Description = "", OperationId = "AddTask", Tags = new[] { "Task" })]
-        public IActionResult AddTask([FromBody] TaskDto newTask)
+        public async Task<IActionResult> AddTask([FromBody] TaskDto taskDto)
         {
-          _TaskRepository.AddTask(newTask);
+            if (taskDto == null)
+            {
+                return BadRequest(new { Message = "Invalid task data" });
+            }
+            var createdTask = await _taskRepository.CreateAsync(taskDto);
 
-            var tasks  = new List<TaskDto>();
-
-            return CreatedAtAction(nameof(GetTaskById), new { id = newTask.Id },
-                new { Message = "Task added successfully", Task = newTask });
+            return CreatedAtAction(nameof(GetTaskById), new { id = createdTask.TaskId },
+                new { Message = "Task added successfully", Task = createdTask });
         }
         /// <summary>
         /// Updates an existing task.
@@ -87,17 +86,21 @@ namespace TMA.Controllers
         
         [HttpPut("UpdateTask")]
         [SwaggerOperation(Summary = "Update Task", Description = "", OperationId = "UpdateTask", Tags = new[] { "Task" })]
-        public IActionResult UpdateTask([FromBody] TaskDto updatedTask)
+        public async Task<IActionResult> UpdateTask([FromBody] TaskDto taskDto)
         {
-            //updatedTask.Id = updatedTask.Id;
-            var Task = _TaskRepository.UpdateTask(updatedTask);
+            if (taskDto.TaskId == 0)
+            {
+                return BadRequest(new { Message = "Invalid Task ID" });
+            }
 
-            if (Task == null)
+            var updatedTask = await _taskRepository.UpdateAsync(taskDto);
+
+            if (updatedTask == null)
             {
                 return NotFound(new { Message = "Task not found" });
             }
 
-            return Ok(new { Message = "Task updated successfully", UpdatedTask = Task });
+            return Ok(new { Message = "Task updated successfully", UpdatedTask = updatedTask });
         }
         /// <summary>
         /// Deletes a task by its ID.
@@ -107,10 +110,11 @@ namespace TMA.Controllers
 
         [HttpDelete("DeleteTask")]
         [SwaggerOperation(Summary = "Delete Task", Description = "", OperationId = "DeleteTask", Tags = new[] { "Task" })]
-        public IActionResult DeleteTask(int id)
+        public async Task<IActionResult> DeleteTask(int id)
         {
-            var Task = _TaskRepository.DeleteTask(id);
-            if (Task == null)
+            var deletedTask = await _taskRepository.DeleteAsync(id);
+
+            if (deletedTask == null)
             {
                 return NotFound(new { Message = "Task not found" });
             }
@@ -118,7 +122,7 @@ namespace TMA.Controllers
             return Ok(new { Message = "Task deleted successfully", DeletedTaskId = id });
         }
 
-
+      
     }
 }
 

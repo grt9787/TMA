@@ -3,6 +3,9 @@ import { TaskService } from '../services/task.service';
 import { TaskDto } from '../modal/TaskDto';
 import { Router } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
+import { CommonDropdownValues } from '../constants';
+import * as _ from 'lodash';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-task-list',
@@ -16,21 +19,35 @@ export class TaskListComponent implements OnInit {
   currentPage = 1;
   pageSize = 10;
   totalTasks = 0;
+  userPermissions: { action: string }[] = []
+  taskTypeList: any[] = [];
   isDeleteMode: boolean = false;
   @ViewChild('deleteTaskModal', { static: true }) deleteTaskModal!: ModalDirective;
 
   constructor(
     private readonly taskService: TaskService,
-    private router: Router
-  ) { }
+    private authService: AuthService,
 
-  ngOnInit() {
-    this.getTasks();
+    private router: Router
+  ) {
+    this.taskTypeList = _.cloneDeep(CommonDropdownValues.TaskTypes).map(taskType => ({
+      ...taskType,
+      value: Number(taskType.value) 
+    }));
   }
 
-  getTasks() {
+  ngOnInit(): void {
+    const permissions = this.authService.getUserPermissions();
+    this.userPermissions = permissions.map((permission:any) => permission.action);
+    this.getTasks();
+  }
+  hasPermission(action: string): boolean {
+    return this.userPermissions.some((permission:any) => permission === action);
+  }
+
+  getTasks(): void {
     this.loading = true;
-    this.taskService.getTask(this.currentPage, this.pageSize).subscribe((data: any) => {
+    this.taskService.getTask(this.currentPage, this.pageSize)!.subscribe((data: any) => {
       this.tasks = data.tasks;
       this.totalTasks = data.totalRecords;
       this.loading = false;
@@ -43,7 +60,7 @@ export class TaskListComponent implements OnInit {
   }
 
   updateTask(taskId: number) {
-    this.router.navigate(['/tasks/edit', taskId]);
+    this.router.navigate(['/tasks/edit',taskId]);
   }
 
   openDeleteTaskModal(taskId: number) {
@@ -62,7 +79,7 @@ export class TaskListComponent implements OnInit {
     if (this.selectedTaskId! > 0) {
       this.taskService.deleteTask(this.selectedTaskId!).subscribe(() => {
         this.closeDeleteModal();
-        this.router.navigate(['/task-list']);
+        this.getTasks();
       });
     }
   }
