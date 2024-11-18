@@ -94,3 +94,9 @@ Ensure the following are installed:
 6.**View Swagger Documentation: Access the API documentation at:**
 
 - https://localhost:7284/swagger/index.html or  http://localhost:5093/swagger/index.html
+7.**Login Credentials:**
+- Admin:   Email : "admin@example.com", Password : "Admin@123";
+- Manager:   Email : "manager@example.com", Password : "Manager@123";
+- User:   Email : "user@example.com", Password : "User@123";
+- Role Management and Logout is Available  under NavbarMenu User Icon.(Note:Role Management can be accessable only for  Admin)
+
