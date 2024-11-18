@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMA.Api;
@@ -11,36 +12,42 @@ using TMA.Api;
 namespace TMA.Api.Migrations
 {
     [DbContext(typeof(TaskContext))]
-    [Migration("20241106095846_InitialCreate")]
+    [Migration("20241118093005_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.35");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "6.0.35")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("TMA.Api.Model.Actions", b =>
                 {
                     b.Property<int>("ActionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ActionId"), 1L, 1);
 
                     b.Property<string>("ActionName")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ModifiedBy")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("ActionId");
 
@@ -52,28 +59,28 @@ namespace TMA.Api.Migrations
                             ActionId = 1,
                             ActionName = "Create",
                             CreatedBy = "System",
-                            CreatedDate = new DateTime(2024, 11, 6, 15, 28, 46, 494, DateTimeKind.Local).AddTicks(5814)
+                            CreatedDate = new DateTime(2024, 11, 18, 15, 0, 4, 858, DateTimeKind.Local).AddTicks(4699)
                         },
                         new
                         {
                             ActionId = 2,
                             ActionName = "Edit",
                             CreatedBy = "System",
-                            CreatedDate = new DateTime(2024, 11, 6, 15, 28, 46, 494, DateTimeKind.Local).AddTicks(5816)
+                            CreatedDate = new DateTime(2024, 11, 18, 15, 0, 4, 858, DateTimeKind.Local).AddTicks(4702)
                         },
                         new
                         {
                             ActionId = 3,
                             ActionName = "Delete",
                             CreatedBy = "System",
-                            CreatedDate = new DateTime(2024, 11, 6, 15, 28, 46, 494, DateTimeKind.Local).AddTicks(5817)
+                            CreatedDate = new DateTime(2024, 11, 18, 15, 0, 4, 858, DateTimeKind.Local).AddTicks(4704)
                         },
                         new
                         {
                             ActionId = 4,
                             ActionName = "View",
                             CreatedBy = "System",
-                            CreatedDate = new DateTime(2024, 11, 6, 15, 28, 46, 494, DateTimeKind.Local).AddTicks(5818)
+                            CreatedDate = new DateTime(2024, 11, 18, 15, 0, 4, 858, DateTimeKind.Local).AddTicks(4706)
                         });
                 });
 
@@ -81,31 +88,33 @@ namespace TMA.Api.Migrations
                 {
                     b.Property<int>("RoleId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"), 1L, 1);
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
 
                     b.Property<string>("ModifiedBy")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RoleDescription")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("RoleId");
 
@@ -116,7 +125,7 @@ namespace TMA.Api.Migrations
                         {
                             RoleId = 1,
                             CreatedBy = "System",
-                            CreatedDate = new DateTime(2024, 11, 6, 15, 28, 46, 494, DateTimeKind.Local).AddTicks(5775),
+                            CreatedDate = new DateTime(2024, 11, 18, 15, 0, 4, 858, DateTimeKind.Local).AddTicks(4651),
                             IsDeleted = false,
                             Name = "Admin",
                             RoleDescription = "Administrator with full access"
@@ -125,7 +134,7 @@ namespace TMA.Api.Migrations
                         {
                             RoleId = 2,
                             CreatedBy = "System",
-                            CreatedDate = new DateTime(2024, 11, 6, 15, 28, 46, 494, DateTimeKind.Local).AddTicks(5789),
+                            CreatedDate = new DateTime(2024, 11, 18, 15, 0, 4, 858, DateTimeKind.Local).AddTicks(4667),
                             IsDeleted = false,
                             Name = "Manager",
                             RoleDescription = "Manager with limited management rights"
@@ -134,7 +143,7 @@ namespace TMA.Api.Migrations
                         {
                             RoleId = 3,
                             CreatedBy = "System",
-                            CreatedDate = new DateTime(2024, 11, 6, 15, 28, 46, 494, DateTimeKind.Local).AddTicks(5790),
+                            CreatedDate = new DateTime(2024, 11, 18, 15, 0, 4, 858, DateTimeKind.Local).AddTicks(4669),
                             IsDeleted = false,
                             Name = "User",
                             RoleDescription = "Standard user with read-only access"
@@ -145,32 +154,34 @@ namespace TMA.Api.Migrations
                 {
                     b.Property<int>("RoleActionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleActionId"), 1L, 1);
 
                     b.Property<int>("ActionId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("HasFullAccess")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
 
                     b.Property<bool>("HasReadOnly")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
 
                     b.Property<string>("ModifiedBy")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("RoleId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("RoleActionId");
 
@@ -186,7 +197,7 @@ namespace TMA.Api.Migrations
                             RoleActionId = 1,
                             ActionId = 1,
                             CreatedBy = "System",
-                            CreatedDate = new DateTime(2024, 11, 6, 15, 28, 46, 494, DateTimeKind.Local).AddTicks(5840),
+                            CreatedDate = new DateTime(2024, 11, 18, 15, 0, 4, 858, DateTimeKind.Local).AddTicks(4733),
                             HasFullAccess = true,
                             HasReadOnly = false,
                             RoleId = 1
@@ -196,7 +207,7 @@ namespace TMA.Api.Migrations
                             RoleActionId = 2,
                             ActionId = 2,
                             CreatedBy = "System",
-                            CreatedDate = new DateTime(2024, 11, 6, 15, 28, 46, 494, DateTimeKind.Local).AddTicks(5843),
+                            CreatedDate = new DateTime(2024, 11, 18, 15, 0, 4, 858, DateTimeKind.Local).AddTicks(4736),
                             HasFullAccess = true,
                             HasReadOnly = false,
                             RoleId = 1
@@ -206,7 +217,7 @@ namespace TMA.Api.Migrations
                             RoleActionId = 3,
                             ActionId = 3,
                             CreatedBy = "System",
-                            CreatedDate = new DateTime(2024, 11, 6, 15, 28, 46, 494, DateTimeKind.Local).AddTicks(5846),
+                            CreatedDate = new DateTime(2024, 11, 18, 15, 0, 4, 858, DateTimeKind.Local).AddTicks(4738),
                             HasFullAccess = true,
                             HasReadOnly = false,
                             RoleId = 1
@@ -216,7 +227,7 @@ namespace TMA.Api.Migrations
                             RoleActionId = 4,
                             ActionId = 4,
                             CreatedBy = "System",
-                            CreatedDate = new DateTime(2024, 11, 6, 15, 28, 46, 494, DateTimeKind.Local).AddTicks(5847),
+                            CreatedDate = new DateTime(2024, 11, 18, 15, 0, 4, 858, DateTimeKind.Local).AddTicks(4740),
                             HasFullAccess = true,
                             HasReadOnly = false,
                             RoleId = 1
@@ -226,7 +237,7 @@ namespace TMA.Api.Migrations
                             RoleActionId = 5,
                             ActionId = 1,
                             CreatedBy = "System",
-                            CreatedDate = new DateTime(2024, 11, 6, 15, 28, 46, 494, DateTimeKind.Local).AddTicks(5849),
+                            CreatedDate = new DateTime(2024, 11, 18, 15, 0, 4, 858, DateTimeKind.Local).AddTicks(4742),
                             HasFullAccess = false,
                             HasReadOnly = false,
                             RoleId = 2
@@ -236,7 +247,7 @@ namespace TMA.Api.Migrations
                             RoleActionId = 6,
                             ActionId = 2,
                             CreatedBy = "System",
-                            CreatedDate = new DateTime(2024, 11, 6, 15, 28, 46, 494, DateTimeKind.Local).AddTicks(5909),
+                            CreatedDate = new DateTime(2024, 11, 18, 15, 0, 4, 858, DateTimeKind.Local).AddTicks(4744),
                             HasFullAccess = false,
                             HasReadOnly = false,
                             RoleId = 2
@@ -246,7 +257,7 @@ namespace TMA.Api.Migrations
                             RoleActionId = 7,
                             ActionId = 4,
                             CreatedBy = "System",
-                            CreatedDate = new DateTime(2024, 11, 6, 15, 28, 46, 494, DateTimeKind.Local).AddTicks(5911),
+                            CreatedDate = new DateTime(2024, 11, 18, 15, 0, 4, 858, DateTimeKind.Local).AddTicks(4746),
                             HasFullAccess = false,
                             HasReadOnly = true,
                             RoleId = 2
@@ -256,7 +267,7 @@ namespace TMA.Api.Migrations
                             RoleActionId = 8,
                             ActionId = 4,
                             CreatedBy = "System",
-                            CreatedDate = new DateTime(2024, 11, 6, 15, 28, 46, 494, DateTimeKind.Local).AddTicks(5913),
+                            CreatedDate = new DateTime(2024, 11, 18, 15, 0, 4, 858, DateTimeKind.Local).AddTicks(4748),
                             HasFullAccess = false,
                             HasReadOnly = true,
                             RoleId = 3
@@ -267,36 +278,38 @@ namespace TMA.Api.Migrations
                 {
                     b.Property<int>("TaskId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TaskId"), 1L, 1);
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsCompleted")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
 
                     b.Property<string>("ModifiedBy")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("TaskStatusId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("TaskTypeId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TaskId");
 
@@ -307,50 +320,52 @@ namespace TMA.Api.Migrations
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"), 1L, 1);
 
                     b.Property<string>("Address")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("City")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ModifiedBy")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("UserStatusId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("UserId");
 
@@ -363,7 +378,7 @@ namespace TMA.Api.Migrations
                             Address = "123 Admin St",
                             City = "Admin City",
                             CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 11, 6, 9, 58, 46, 494, DateTimeKind.Utc).AddTicks(5484),
+                            CreatedDate = new DateTime(2024, 11, 18, 9, 30, 4, 858, DateTimeKind.Utc).AddTicks(4287),
                             Email = "admin@example.com",
                             FirstName = "Admin",
                             IsDeleted = false,
@@ -378,7 +393,7 @@ namespace TMA.Api.Migrations
                             Address = "456 Manager Ave",
                             City = "Manager City",
                             CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 11, 6, 9, 58, 46, 494, DateTimeKind.Utc).AddTicks(5490),
+                            CreatedDate = new DateTime(2024, 11, 18, 9, 30, 4, 858, DateTimeKind.Utc).AddTicks(4294),
                             Email = "manager@example.com",
                             FirstName = "Manager",
                             IsDeleted = false,
@@ -393,7 +408,7 @@ namespace TMA.Api.Migrations
                             Address = "789 User Blvd",
                             City = "User City",
                             CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 11, 6, 9, 58, 46, 494, DateTimeKind.Utc).AddTicks(5492),
+                            CreatedDate = new DateTime(2024, 11, 18, 9, 30, 4, 858, DateTimeKind.Utc).AddTicks(4297),
                             Email = "user@example.com",
                             FirstName = "Regular",
                             IsDeleted = false,
@@ -408,26 +423,28 @@ namespace TMA.Api.Migrations
                 {
                     b.Property<int>("UserRoleId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserRoleId"), 1L, 1);
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ModifiedBy")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("RoleId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("UserRoleId");
 
@@ -442,7 +459,7 @@ namespace TMA.Api.Migrations
                         {
                             UserRoleId = 1,
                             CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 11, 6, 9, 58, 46, 494, DateTimeKind.Utc).AddTicks(5741),
+                            CreatedDate = new DateTime(2024, 11, 18, 9, 30, 4, 858, DateTimeKind.Utc).AddTicks(4616),
                             RoleId = 1,
                             UserId = 1
                         },
@@ -450,7 +467,7 @@ namespace TMA.Api.Migrations
                         {
                             UserRoleId = 2,
                             CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 11, 6, 9, 58, 46, 494, DateTimeKind.Utc).AddTicks(5743),
+                            CreatedDate = new DateTime(2024, 11, 18, 9, 30, 4, 858, DateTimeKind.Utc).AddTicks(4619),
                             RoleId = 2,
                             UserId = 2
                         },
@@ -458,7 +475,7 @@ namespace TMA.Api.Migrations
                         {
                             UserRoleId = 3,
                             CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 11, 6, 9, 58, 46, 494, DateTimeKind.Utc).AddTicks(5744),
+                            CreatedDate = new DateTime(2024, 11, 18, 9, 30, 4, 858, DateTimeKind.Utc).AddTicks(4620),
                             RoleId = 3,
                             UserId = 3
                         });

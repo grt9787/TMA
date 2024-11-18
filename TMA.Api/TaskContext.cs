@@ -22,15 +22,20 @@ namespace TMA.Api
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<RoleAction> RoleActions { get; set; }
         public DbSet<Actions> Actions { get; set; }
-
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlite("Data Source=taskmanagementapp.db");
-            }
+                //For Using SQLite Database
+                //  optionsBuilder.UseSqlite("Data Source=taskmanagementapp.db");
 
+                //For Using SQL Server Database
+                optionsBuilder.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
+            }
         }
+
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

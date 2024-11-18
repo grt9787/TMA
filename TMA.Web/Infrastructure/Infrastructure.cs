@@ -17,7 +17,12 @@ namespace TMA.Infrastructure
         public static void SetDBContext(IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<TaskContext>(options =>
-                options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
+
+            //For Using SQLite Database
+            // options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
+
+            //For Using SQL Server Database
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), x => x.MigrationsHistoryTable("__EFMigrationsHistory")));
         }
     }
 }
